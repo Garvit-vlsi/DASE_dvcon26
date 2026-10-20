@@ -1,4 +1,4 @@
-<div align="center">
+<div align="left">
 
 # RISC-V Single-Cycle Core
 
