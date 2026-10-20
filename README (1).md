@@ -223,8 +223,8 @@ The program is hard-coded in the `initial` block of `src/Instruction_Memory.v`:
 
 | Address | Machine Code | Assembly | Effect |
 |:-------:|:------------:|:---------|:-------|
-| `0x00` | `00500293` | `addi x5, x0, 5` | *No effect — see [Known Limitations](#known-limitations)* |
-| `0x04` | `00400313` | `addi x6, x0, 4` | *No effect — see [Known Limitations](#known-limitations)* |
+| `0x00` | `00500293` | `addi x5, x0, 5` | *No effect
+| `0x04` | `00400313` | `addi x6, x0, 4` | *No effect 
 | `0x08` | `006283B3` | `add  x7, x5, x6` | `x7 = 5 + 4 = 9` |
 | `0x0C` | `406283B3` | `sub  x7, x5, x6` | `x7 = 5 - 4 = 1` |
 
