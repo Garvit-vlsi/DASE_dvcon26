@@ -1,0 +1,44 @@
+# DASE v1.2 configuration
+# Algorithm: GA (roulette-wheel + crossover) + CMA-ES self-tuning
+# Matches the original PPT exactly. No hardcoded weights.
+
+inner:
+  generations: 25
+  population: 8
+  seeds: 12
+  mutation_rate: 0.3
+  crossover_rate: 0.7
+  elitism_k: 2
+
+weights:
+  raw:     0.40
+  hazard:  0.25
+  opcode:  0.15
+  branch:  0.10
+  balance: 0.10
+
+ceilings:
+  raw:     80.0
+  hazard:  15.0
+  opcode:  8.0
+
+cma_es:
+  max_fevals: 100
+  sigma0: 0.6
+  meta_seeds: 6
+  weight_lower: 0.05
+  weight_upper: 0.60
+  ceiling_lower: [20.0, 5.0, 4.0]
+  ceiling_upper: [150.0, 40.0, 16.0]
+  bounds_unconstrained: [-4.0, 4.0]
+
+paper_targets:
+  dase_mean:   0.861
+  dase_ci:     [0.844, 0.878]
+  random_mean: 0.771
+  random_ci:   [0.740, 0.803]
+  cohens_d:    2.0
+  p_value:     0.000132
+  unique_opcodes_dase: 13
+  unique_opcodes_random: 7
+  throughput_ips: 32.12

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASE Flow Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background-color: #ffffff;
+            font-family: 'Segoe UI', Inter, Arial, sans-serif;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            gap: 40px 80px;
+            align-items: start;
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            color: #0F4C75;
+            font-size: 36px;
+            margin-bottom: 40px;
+        }
+        .box {
+            background: white;
+            border: 4px solid #0F4C75;
+            border-radius: 12px;
+            padding: 25px 15px;
+            width: 220px;
+            text-align: center;
+            color: #0F4C75;
+            font-weight: 700;
+            font-size: 22px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .sim { border-color: #3B8C6E; color: #3B8C6E; background: #f0fdf4; }
+        .metrics { border-color: #F28123; color: #F28123; background: #fff8f0; }
+        
+        .col { display: flex; flex-direction: column; align-items: center; gap: 0px; }
+        
+        .arrow-down {
+            width: 4px;
+            height: 50px;
+            background-color: #0F4C75;
+            position: relative;
+        }
+        .arrow-down::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: -8px;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid #0F4C75;
+        }
+        
+        .arrow-right {
+            height: 4px;
+            width: 80px;
+            background-color: #0F4C75;
+            position: absolute;
+            top: 50%;
+            right: -84px;
+            transform: translateY(-50%);
+        }
+        .arrow-right::after {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: -8px;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 15px solid #0F4C75;
+        }
+
+        .loop-path {
+            position: absolute;
+            border: 5px solid #0F4C75;
+            border-left: none;
+            border-radius: 0 30px 30px 0;
+            right: -140px;
+            top: 100px;
+            width: 100px;
+            height: 780px;
+        }
+        .loop-path::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: -12px;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 15px solid #0F4C75;
+        }
+        .loop-label {
+            position: absolute;
+            right: -180px;
+            top: 450px;
+            background: white;
+            padding: 8px 16px;
+            color: #0F4C75;
+            font-weight: 700;
+            font-size: 20px;
+            border: 3px solid #0F4C75;
+            border-radius: 8px;
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+    <h1>DASE: End-to-End Workflow</h1>
+    <div class="container">
+        
+        <!-- Col 1 -->
+        <div class="col">
+            <div class="box">Genome<br>(R, H, O, B)</div>
+            <div class="arrow-down"></div>
+            <div class="box">Program Generator</div>
+            <div style="position: relative; width: 220px; display: flex; justify-content: center;">
+                <div class="arrow-right"></div>
+            </div>
+        </div>
+        
+        <!-- Col 2 -->
+        <div class="col">
+            <div class="box">RISC-V Compiler</div>
+            <div class="arrow-down"></div>
+            <div class="box sim">RTL Simulation</div>
+            <div style="position: relative; width: 220px; display: flex; justify-content: center;">
+                <div class="arrow-right"></div>
+            </div>
+        </div>
+        
+        <!-- Col 3 -->
+        <div class="col">
+            <div class="box sim">PicoRV32 Core</div>
+            <div class="arrow-down"></div>
+            <div class="box metrics">Coverage Extract</div>
+            <div style="position: relative; width: 220px; display: flex; justify-content: center;">
+                <div class="arrow-right"></div>
+            </div>
+        </div>
+        
+        <!-- Col 4 -->
+        <div class="col">
+            <div class="box metrics">Fitness Compute</div>
+            <div class="arrow-down"></div>
+            <div class="box">Roulette-Wheel<br>Selection</div>
+            <div class="arrow-down"></div>
+            <div class="box">Crossover</div>
+            <div class="arrow-down"></div>
+            <div class="box">Mutation Engine</div>
+        </div>
+        
+        <!-- Loop Arrow -->
+        <div class="loop-path"></div>
+        <div class="loop-label">Loop (25 Gens)</div>
+    </div>
+</body>
+</html>

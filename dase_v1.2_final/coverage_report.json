@@ -1,0 +1,14 @@
+{
+    "raw_chain_depth": 41,
+    "load_after_store": 11,
+    "branch_taken": 1,
+    "branch_not_taken": 0,
+    "opcodes": [
+        3,
+        35,
+        99,
+        51,
+        19
+    ],
+    "trap": false
+}
