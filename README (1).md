@@ -42,7 +42,7 @@ A companion design document, *RISC-V Single Cycle Microarchitecture* (MERL-DSU),
 | R-type | `or`        | `0110011` | `110` | — | Bitwise OR |
 | R-type | `and`       | `0110011` | `111` | — | Bitwise AND |
 
-> **Note:** `beq` is decoded by the control unit (`Branch`, `ALUOp = 01`) but branching is **not yet wired into the top-level datapath**. See [Known Limitations](#known-limitations).
+> **Note:** `beq` is decoded by the control unit (`Branch`, `ALUOp = 01`) but branching is **not yet wired into the top-level datapath**. 
 
 ---
 
