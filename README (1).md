@@ -4,46 +4,6 @@
 
 **A synthesizable 32-bit RISC-V (RV32I subset) single-cycle processor written in Verilog.**
 
-[![Language: Verilog](https://img.shields.io/badge/language-Verilog-blue.svg)](#tech-stack)
-[![ISA: RISC-V RV32I subset](https://img.shields.io/badge/ISA-RV32I%20(subset)-orange.svg)](#supported-instructions)
-[![Simulator: Icarus Verilog](https://img.shields.io/badge/sim-Icarus%20Verilog-green.svg)](#prerequisites)
-[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-lightgrey.svg)](#license)
-[![Build Status](https://img.shields.io/badge/build-[BUILD_BADGE_URL]-lightgrey.svg)](#)
-
-*Developed by [MERL-DSU](https://github.com/merldsu) — Accelerating Engineering Innovation*
-
-</div>
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Supported Instructions](#supported-instructions)
-- [Architecture](#architecture)
-  - [Datapath](#datapath)
-  - [Control Unit](#control-unit)
-  - [ALU](#alu)
-  - [Module Reference](#module-reference)
-- [Tech Stack](#tech-stack)
-- [Repository Structure](#repository-structure)
-- [Prerequisites](#prerequisites)
-- [Installation & Setup](#installation--setup)
-- [Usage / Quick Start](#usage--quick-start)
-  - [Running the Testbench](#running-the-testbench)
-  - [Viewing Waveforms](#viewing-waveforms)
-  - [Default Demo Program](#default-demo-program)
-  - [Loading Your Own Program](#loading-your-own-program)
-- [Configuration](#configuration)
-- [Module Interfaces (Core API)](#module-interfaces-core-api)
-- [Known Limitations](#known-limitations)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [License](#license)
-
----
-
 ## Overview
 
 This repository contains the design files for a **RISC-V single-cycle microprocessor core**. Every instruction is fetched, decoded, executed, and written back within a **single clock cycle**, making the design an ideal reference for learning computer architecture, validating datapath/control concepts, or serving as a starting point for a pipelined implementation.
@@ -180,8 +140,8 @@ The ALU takes two 32-bit operands (`A`, `B`) and a 3-bit `ALUControl`, and produ
 | Category | Tool / Technology |
 |----------|-------------------|
 | HDL | Verilog (IEEE 1364) |
-| Simulation | [Icarus Verilog](https://steveicarus.github.io/iverilog/) (`iverilog` / `vvp`) |
-| Waveform Viewer | [GTKWave](https://gtkwave.sourceforge.net/) |
+| Simulation | [Icarus Verilog] (`iverilog` / `vvp`) |
+| Waveform Viewer | [GTKWave] |
 | ISA | RISC-V RV32I (subset) |
 
 ---
@@ -222,50 +182,7 @@ RISCV_Single_Cycle_Core/
 |------------|---------|-------|
 | **Icarus Verilog** (`iverilog`, `vvp`) | Compile and run the simulation | Any recent release should work. |
 | **GTKWave** | View `.vcd` waveforms | Optional, but recommended. |
-| **Git** | Clone the repository | — |
 
-Install on common platforms:
-
-```bash
-# Debian / Ubuntu
-sudo apt-get install iverilog gtkwave
-
-# macOS (Homebrew)
-brew install icarus-verilog
-brew install --cask gtkwave
-
-# Windows
-# Install Icarus Verilog + GTKWave from their official installers,
-# or use WSL and follow the Debian / Ubuntu instructions above.
-```
-
----
-
-## Installation & Setup
-
-1. **Clone the repository**
-
-   ```bash
-   git clone [REPO_URL]
-   cd RISCV_Single_Cycle_Core
-   ```
-
-2. **Verify your toolchain**
-
-   ```bash
-   iverilog -V
-   vvp -V
-   ```
-
-3. **Move into the source directory**
-
-   ```bash
-   cd src
-   ```
-
-No build system, package manager, or environment variables are required.
-
----
 
 ## Usage / Quick Start
 
@@ -421,85 +338,9 @@ This project has **no environment variables, secrets, or external configuration 
 
 ---
 
-## Known Limitations
 
-This core is a learning/reference implementation. Please be aware of the following behaviors in the current source:
 
-| # | Limitation | Detail |
-|:-:|------------|--------|
-| 1 | **Branches are not implemented in the datapath** | `Main_Decoder` decodes `beq` and asserts `Branch`, but `Single_Cycle_Top` leaves `Branch`, and the ALU `Zero` flag unconnected. There is no `PCSrc` logic or branch-target adder, so the PC always advances by `+4`. |
-| 2 | **B-type immediates are not generated** | `Sign_Extend` receives only `ImmSrc[0]`, so it handles I-type and S-type formats only. |
-| 3 | **I-type ALU instructions (`addi`, `andi`, …) are not decoded** | Opcode `0010011` is not recognized by `Main_Decoder`, so `RegWrite` stays low. In the demo program, the two `addi` instructions are therefore no-ops, and `x5`/`x6` are seeded in `Register_File.v` instead. |
-| 4 | **Data memory is word-indexed by the raw address** | `Data_Memory` uses `mem[A]` rather than `mem[A[31:2]]`, so addresses are treated as word indices rather than byte addresses. Instruction memory, by contrast, correctly uses `A[31:2]`. |
-| 5 | **No sub-word access** | Only `lw`/`sw` are supported; `lb`, `lh`, `lbu`, `lhu`, `sb`, `sh` are not. |
-| 6 | **`x0` is not hard-wired to zero** | `Register_File` allows writes to register 0. |
-| 7 | **`slt` ignores signed overflow** | The result is taken from `Sum[31]` directly, so it can be incorrect when the subtraction overflows. |
-| 8 | **Shift, XOR, `slti`/`sltu`, LUI/AUIPC, JAL/JALR are unsupported** | These appear in the reference tables of the design document but are outside the implemented subset. |
-| 9 | **Program loaded via hard-coded `initial` block** | The `$readmemh` path is commented out; the bundled `memfile.hex` files are not read by default. |
-| 10 | **Status flags unused at top level** | `Carry`, `OverFlow`, `Zero`, and `Negative` are generated by the ALU but not connected in `Single_Cycle_Top`. |
 
-Contributions that close any of these gaps are welcome (see below).
 
----
-
-## Documentation
-
-The accompanying design document, **"RISC-V Single Cycle Microarchitecture"** (MERL-DSU, 21 pages), covers:
-
-| Section | Topic |
-|---------|-------|
-| 1 | Arithmetic Logic Unit — operation table, block diagram, flag generation |
-| 2 | Control Unit — R/I/S/B instruction formats, Main Decoder and ALU Decoder truth tables |
-| 3 | Microarchitecture I — state elements (PC, register file, memories) and the RISC-V register map |
-| 4 | Microarchitecture II — datapath for `lw`, immediate sign extension |
-| 5 | Microarchitecture III — datapath extension for `sw` |
-| 6 | Microarchitecture IV — datapath extension for R-type instructions |
-
-Place the PDF in a `docs/` folder and link it here: **[DOCS_LINK]**
-
----
-
-## Contributing
-
-Contributions are welcome! To propose a change:
-
-1. **Fork** the repository.
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. **Make your changes**, following the existing conventions:
-   - One module per file, file name matching the module (e.g. `ALU.v` → `module ALU`).
-   - Keep new design files `` `include ``-able from `Single_Cycle_Top.v`.
-   - Use the active-low `rst` convention for state elements.
-4. **Verify** that the testbench still compiles and runs cleanly:
-   ```bash
-   cd src
-   iverilog -o sim.out Single_Cycle_Top_Tb.v Single_Cycle_Top.v && vvp sim.out
-   ```
-5. **Commit** with a clear message and **push** your branch.
-6. **Open a Pull Request** describing what changed and why, including waveform evidence or testbench output where relevant.
-
-Good first contributions: wiring up `beq` (branch adder + `PCSrc`), adding B-type immediate decoding, supporting `addi`/I-type ALU ops, fixing the data-memory byte addressing, or adding a self-checking testbench.
-
-Please open an issue first for larger architectural changes.
-
----
-
-## License
-
-Copyright 2023 MERL-DSU
-
-Licensed under the **Apache License, Version 2.0** (the "License"); you may not use this project except in compliance with the License. You may obtain a copy of the License at
-
-> <http://www.apache.org/licenses/LICENSE-2.0>
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
----
-
-<div align="center">
-
-*Built by [MERL-DSU](https://github.com/merldsu) — Accelerating Engineering Innovation*
 
 </div>
